@@ -3,10 +3,13 @@ PatientTriage.ai - Main FastAPI Application.
 Multi-Hospital Clinical Decision Support & Care Coordination Platform.
 """
 
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import init_db
@@ -67,10 +70,6 @@ def health_check():
     }
 
 
-import os
-from fastapi.responses import FileResponse
-
-
 @app.get("/api/info", tags=["System Info"])
 @app.get("/info", tags=["System Info"])
 def root_info():
@@ -128,9 +127,6 @@ else:
     @app.get("/", tags=["Root"])
     def root_fallback():
         return root_info()
-
-
-from fastapi.exceptions import RequestValidationError
 
 
 @app.exception_handler(RequestValidationError)
