@@ -5,9 +5,7 @@
 
 > **AI Recommends. Humans Decide.**
 
-PatientTriage.ai is a full-stack clinical decision-support prototype designed to help emergency department staff organize patient intake, identify safety concerns, prioritize emergency cases, and manage patient records.
-
-The platform combines a **safety-first deterministic triage engine**, hospital staff management, patient records, emergency queues, appointments, clinical notes, and audit trails into a single hospital workflow.
+PatientTriage.ai is a full-stack clinical decision-support prototype designed to help emergency department staff organize patient intake, identify potential safety concerns, prioritize emergency cases, and manage patient records. The platform combines AI-assisted triage, hospital staff management, emergency queues, patient history, appointments, clinical notes, and audit trails into a unified hospital workflow.
 
 ---
 
@@ -23,31 +21,31 @@ The platform combines a **safety-first deterministic triage engine**, hospital s
 
 # 1. Why PatientTriage.ai?
 
-Emergency departments can become overloaded when many patients arrive at the same time. During these situations, staff need to quickly identify which patients require immediate attention, which patients can safely wait, and whether important information is missing.
+Emergency departments can become overloaded when many patients arrive at the same time. During these situations, healthcare staff need to quickly understand which patients may require immediate attention, which patients can wait, what critical information is missing, and how the current emergency queue should be organized.
 
-PatientTriage.ai explores how AI-assisted software can support this workflow without replacing healthcare professionals.
+PatientTriage.ai explores how AI-assisted software can support this workflow while keeping healthcare professionals in control. The system focuses on structured information, safety checks, patient prioritization, transparent recommendations, and complete hospital workflow management rather than replacing clinical judgment.
 
-The system is designed around three principles:
+The core principle is:
 
-- **AI recommends — humans decide**
-- **Worst-case safety before average-case optimization**
-- **Transparent and auditable recommendations**
-
-Instead of simply producing an AI-generated priority, the platform checks safety conditions, validates available information, identifies uncertainty, and provides an explainable recommendation for clinical review.
+> **AI Recommends. Humans Decide.**
 
 ---
 
 # 2. What Does PatientTriage.ai Do?
 
-The platform provides the following major capabilities:
+PatientTriage.ai provides a complete hospital workflow for managing patients from registration through emergency triage and follow-up care. Hospital administrators can create and manage their organization, staff members can access the system according to their roles, and new patients receive automatically generated hospital-specific IDs. When a patient arrives at the emergency department, staff can record symptoms, functional status, vital signs, medical history, and immediate safety information. The system then generates an AI-assisted triage recommendation using deterministic clinical decision-support logic. Patients can be placed into a priority-based emergency queue, where higher-acuity cases are shown first and earlier arrival times are used to order patients with the same priority. Staff can also access longitudinal patient profiles containing previous visits, medical conditions, allergies, medications, doctors, clinical notes, triage history, and upcoming appointments. The platform also supports appointments, encounters, staff management, human clinical overrides, audit trails, and operational analytics.
+
+---
+
+# 3. Main Features
 
 - 🏥 Multi-hospital organization management
 - 🔐 Staff authentication and role-based access
 - 👤 Automatic patient registration and patient IDs
 - 🚑 Emergency department intake
-- 🛡️ 12 immediate safety guards
+- 🛡️ Immediate safety screening
 - ❤️ Vital-sign validation
-- 🤖 Deterministic AI-assisted triage recommendation
+- 🤖 AI-assisted triage recommendations
 - 🚨 Five-level emergency priority system
 - 📋 Live emergency acuity queue
 - 🗂️ Longitudinal patient records
@@ -60,9 +58,119 @@ The platform provides the following major capabilities:
 
 ---
 
-# 3. Emergency Triage Workflow
+# 4. Project Structure
 
-The main workflow is:
+```text
+patient-triage-ai/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── auth.py
+│   │   │   ├── patients.py
+│   │   │   ├── triage.py
+│   │   │   ├── appointments.py
+│   │   │   ├── hospital.py
+│   │   │   └── audit.py
+│   │   │
+│   │   └── triage_engine/
+│   │       ├── safety.py
+│   │       ├── scoring.py
+│   │       ├── validation.py
+│   │       └── explanation.py
+│   │
+│   ├── tests/
+│   │   ├── test_auth.py
+│   │   ├── test_api.py
+│   │   ├── test_patient_lifecycle.py
+│   │   ├── test_patient_id_sequence.py
+│   │   ├── test_safety_engine.py
+│   │   ├── test_worst_case.py
+│   │   ├── test_triage_engine.py
+│   │   ├── test_dates_and_validation.py
+│   │   ├── test_master_flow.py
+│   │   └── test_production_readiness_audit.py
+│   │
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── contexts/
+│   │   └── App.tsx
+│   │
+│   ├── package.json
+│   └── Dockerfile
+│
+├── docker-compose.yml
+├── Dockerfile
+├── .dockerignore
+├── .gitignore
+├── start.bat
+├── start.sh
+└── README.md
+````
+
+---
+
+# 5. System Architecture
+
+```mermaid
+flowchart TD
+
+    U[Hospital Staff]
+
+    subgraph Frontend["Frontend - React + TypeScript + Tailwind"]
+        UI1[Authentication]
+        UI2[Hospital Dashboard]
+        UI3[Emergency Triage]
+        UI4[Emergency Queue]
+        UI5[Patient Records]
+        UI6[Appointments]
+        UI7[Staff Management]
+        UI8[Audit Trail]
+    end
+
+    subgraph Backend["Backend - FastAPI"]
+        A1[JWT Authentication]
+        A2[Role-Based Access]
+        A3[Patient APIs]
+        A4[Triage APIs]
+        A5[Hospital APIs]
+        A6[Appointment APIs]
+        A7[Audit APIs]
+    end
+
+    subgraph Engine["Clinical Decision Support"]
+        E1[Safety Screening]
+        E2[Vital Validation]
+        E3[Uncertainty Evaluation]
+        E4[5-Tier Priority Scoring]
+        E5[Recommendation Layer]
+    end
+
+    DB[(SQLite Database)]
+
+    U --> Frontend
+    Frontend --> Backend
+    Backend --> Engine
+    Backend --> DB
+```
+
+The frontend provides the hospital workstation interface and communicates with the FastAPI backend through REST APIs. The backend manages authentication, authorization, patient records, appointments, hospital operations, triage requests, and audit information. Clinical decision-support requests are processed by the triage engine, while application data is stored in the SQLite database.
+
+---
+
+# 6. Emergency Triage Workflow
+
+The main emergency workflow is:
 
 ```text
 Patient Arrives
@@ -77,9 +185,7 @@ Safety Screening
       ↓
 Vital Signs & Medical History
       ↓
-Uncertainty & Safety Evaluation
-      ↓
-Triage Recommendation
+Triage Assessment
       ↓
 Clinical Review
       ↓
@@ -90,50 +196,13 @@ Doctor Consultation
 Clinical Notes / Encounter
       ↓
 Follow-up Appointment
-````
+```
 
-The system assists staff throughout this process while keeping the final decision with healthcare professionals.
+The system is designed to assist staff throughout the workflow while keeping the final clinical decision with qualified healthcare professionals.
 
 ---
 
-# 4. Safety-First Triage Engine
-
-PatientTriage.ai uses a **worst-case-first safety approach**.
-
-The system currently checks 12 immediate safety categories:
-
-1. Airway compromise
-2. Severe breathing difficulty
-3. Shock / poor perfusion
-4. Chest pain
-5. Loss of consciousness
-6. Altered mental status
-7. Seizure
-8. Stroke-like symptoms
-9. Severe bleeding / hemorrhage
-10. Anaphylaxis
-11. Major trauma
-12. Severe pain / distress
-
-Each safety condition supports:
-
-```text
-YES
-NO
-UNKNOWN
-```
-
-A key design principle is:
-
-```text
-UNKNOWN ≠ NO
-```
-
-If critical information is missing, the system does not automatically assume that the patient is safe. Instead, uncertainty can increase the need for human review.
-
----
-
-# 5. Five-Level Triage Priority
+# 7. Five-Level Triage Priority
 
 The prototype uses five priority levels:
 
@@ -161,34 +230,7 @@ The result is a **decision-support recommendation, not a diagnosis**.
 
 ---
 
-# 6. Explainable Recommendations
-
-PatientTriage.ai does not aim to return only a priority label such as:
-
-```text
-RED
-```
-
-Instead, the system provides supporting factors that explain why a recommendation was generated.
-
-Example:
-
-```text
-Recommended Priority: RED
-
-Contributing Factors:
-- Immediate safety concern detected
-- Abnormal vital sign identified
-- Critical information is missing
-
-Human Review Required
-```
-
-This allows healthcare professionals to review the recommendation instead of blindly accepting an unexplained AI output.
-
----
-
-# 7. Emergency Acuity Queue
+# 8. Emergency Acuity Queue
 
 After triage, patients can enter the emergency queue.
 
@@ -214,13 +256,13 @@ IN_CONSULTATION
 COMPLETED
 ```
 
-This provides staff with a real-time operational view of patients waiting for attention.
+This gives emergency department staff an operational view of patients currently waiting for attention.
 
 ---
 
-# 8. Patient Records
+# 9. Patient Records
 
-PatientTriage.ai maintains a longitudinal patient profile instead of treating every visit as a separate record.
+PatientTriage.ai maintains a longitudinal patient profile rather than treating every visit as a separate record.
 
 A patient profile can contain:
 
@@ -257,7 +299,7 @@ The sequence is maintained separately for each hospital.
 
 ---
 
-# 9. Multi-Hospital Architecture
+# 10. Multi-Hospital Architecture
 
 PatientTriage.ai is designed as a multi-hospital platform.
 
@@ -276,58 +318,12 @@ Each hospital operates inside its own organization boundary.
     Triage          Triage          Triage
 ```
 
-Hospital staff should only be able to access data belonging to their own organization.
-
 Supported staff roles include:
 
 * Hospital Admin
 * Doctor
 * Triage Nurse
 * Receptionist
-
----
-
-# 10. System Architecture
-
-```mermaid
-flowchart TD
-    U[Hospital Staff]
-
-    subgraph Frontend["Frontend - React + TypeScript + Tailwind"]
-        UI1[Authentication]
-        UI2[Hospital Dashboard]
-        UI3[Emergency Triage]
-        UI4[Emergency Queue]
-        UI5[Patient Records]
-        UI6[Appointments]
-        UI7[Staff Management]
-    end
-
-    subgraph Backend["Backend - FastAPI"]
-        A1[JWT Authentication]
-        A2[Role-Based Access]
-        A3[Patient APIs]
-        A4[Triage APIs]
-        A5[Hospital APIs]
-        A6[Appointment APIs]
-        A7[Audit APIs]
-    end
-
-    subgraph Engine["Clinical Decision Support Engine"]
-        E1[12 Safety Guards]
-        E2[Vital Validation]
-        E3[Uncertainty Evaluation]
-        E4[5-Tier Priority Scoring]
-        E5[Explainable Recommendation]
-    end
-
-    DB[(SQLite Database)]
-
-    U --> Frontend
-    Frontend --> Backend
-    Backend --> Engine
-    Backend --> DB
-```
 
 ---
 
@@ -353,13 +349,17 @@ flowchart TD
 
 * Deterministic Python-based triage engine
 * Safety and uncertainty evaluation
-* Explainable recommendation layer
+* Priority scoring
+* Recommendation layer
 * Optional OpenAI / Gemini integration
 
 ### Database
 
 * SQLite
-* Hospital-scoped patient and workflow records
+* Hospital-scoped patient records
+* Medical histories
+* Visits and appointments
+* Triage records
 * Audit logs
 * Patient ID sequences
 
@@ -367,7 +367,8 @@ flowchart TD
 
 * Pytest
 * API testing
-* Clinical engine testing
+* Triage engine testing
+* Patient lifecycle testing
 * End-to-end workflow testing
 
 ### Deployment
@@ -375,48 +376,11 @@ flowchart TD
 * Docker
 * Docker Compose
 * Nginx
-* Render-compatible container deployment
+* Render-compatible deployment
 
 ---
 
-# 12. Project Structure
-
-```text
-patient-triage-ai/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── config.py
-│   │   ├── database.py
-│   │   ├── routes/
-│   │   └── triage_engine/
-│   │
-│   ├── tests/
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── contexts/
-│   ├── package.json
-│   └── Dockerfile
-│
-├── docker-compose.yml
-├── Dockerfile
-├── .dockerignore
-├── .gitignore
-├── start.bat
-├── start.sh
-└── README.md
-```
-
----
-
-# 13. Installation & Running Locally
+# 12. Installation & Running Locally
 
 ## Prerequisites
 
@@ -463,7 +427,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run the backend:
+Start the backend:
 
 ```bash
 uvicorn app.main:app --reload --port 8000
@@ -491,7 +455,7 @@ http://localhost:8000/health
 
 ## Frontend Setup
 
-Open a second terminal:
+Open another terminal:
 
 ```bash
 cd frontend
@@ -507,9 +471,9 @@ http://localhost:5173
 
 ---
 
-# 14. Docker Deployment
+# 13. Docker Deployment
 
-Docker provides an easier way to run the complete application.
+Docker provides an easy way to run the complete application.
 
 ### Prerequisites
 
@@ -524,13 +488,13 @@ From the project root:
 docker compose up --build
 ```
 
-The application will start with:
+The application runs as:
 
 ```text
 Frontend → Nginx → FastAPI → SQLite
 ```
 
-Open:
+Open the application:
 
 ```text
 http://localhost:5173
@@ -548,7 +512,7 @@ Swagger:
 http://localhost:8000/docs
 ```
 
-Health:
+Health check:
 
 ```text
 http://localhost:8000/health
@@ -580,7 +544,7 @@ docker compose down
 
 ---
 
-# 15. Automated Test Suite
+# 14. Automated Test Suite
 
 PatientTriage.ai includes automated backend tests covering authentication, hospital isolation, patient management, safety checks, triage logic, appointments, and complete workflows.
 
@@ -596,24 +560,24 @@ Or from the backend directory:
 pytest tests -v
 ```
 
-Important test areas include:
+### Test Areas
 
 * `test_auth.py` — Authentication and staff permissions
 * `test_api.py` — API endpoints and health checks
 * `test_patient_lifecycle.py` — Patient records and encounters
-* `test_patient_id_sequence.py` — Sequential hospital-specific patient IDs
-* `test_safety_engine.py` — 12 safety guards
+* `test_patient_id_sequence.py` — Hospital-specific sequential patient IDs
+* `test_safety_engine.py` — Safety screening
 * `test_worst_case.py` — Missing data and abnormal values
 * `test_triage_engine.py` — Deterministic priority scoring
 * `test_dates_and_validation.py` — Date and datetime validation
 * `test_master_flow.py` — Complete multi-hospital workflow
 * `test_production_readiness_audit.py` — Production workflow audit
 
-The test suite is intended to verify both individual components and complete end-to-end hospital workflows.
+The test suite is designed to verify both individual components and complete end-to-end hospital workflows.
 
 ---
 
-# 16. Environment Variables
+# 15. Environment Variables
 
 Create a `.env` file when required.
 
@@ -629,34 +593,15 @@ GEMINI_API_KEY=
 VITE_API_URL=http://localhost:8000/api
 ```
 
-The core triage engine does not require an external LLM API.
+The core triage engine can operate without an external LLM API.
 
-If an API key is provided, an LLM can optionally be used to enhance explanations.
+Optional OpenAI or Gemini integration can be used to enhance explanations.
 
 **Never commit API keys or other secrets to GitHub.**
 
 ---
 
-# 17. Security & Privacy
-
-The prototype includes:
-
-* JWT-based authentication
-* Password hashing
-* Role-based access control
-* Hospital-level data isolation
-* Server-side patient ID generation
-* Audit logging
-* Backend validation
-* Environment-based secret configuration
-
-All project patient scenarios should use **synthetic data only**.
-
-Do not upload real patient information to this repository or public deployment.
-
----
-
-# 18. Important Limitations
+# 16. Important Limitations
 
 PatientTriage.ai is a software prototype and has not been clinically validated.
 
@@ -668,11 +613,13 @@ It does not:
 * Replace doctors or nurses
 * Make autonomous healthcare decisions
 
-The current project uses SQLite for simplicity and demonstration. For a real production healthcare system, a production-grade database, stronger infrastructure security, clinical validation, regulatory compliance, monitoring, interoperability, and extensive testing would be required.
+The current prototype uses SQLite for simplicity and demonstration. A real production healthcare system would require production-grade database infrastructure, clinical validation, regulatory compliance, monitoring, security controls, interoperability, and extensive testing.
+
+All patient scenarios used with this project should be synthetic.
 
 ---
 
-# 19. Future Improvements
+# 17. Future Improvements
 
 Potential future improvements include:
 
@@ -682,16 +629,16 @@ Potential future improvements include:
 * Department routing
 * Waiting-time prediction
 * Hospital capacity forecasting
-* Advanced analytics
+* Advanced operational analytics
 * Healthcare interoperability
-* More detailed clinical explainability
+* Improved clinical explainability
 * Model evaluation and monitoring
 * Enterprise authentication
-* Advanced security and monitoring
+* Advanced security monitoring
 
 ---
 
-# 20. License
+# 18. License
 
 This project is licensed under the MIT License.
 
