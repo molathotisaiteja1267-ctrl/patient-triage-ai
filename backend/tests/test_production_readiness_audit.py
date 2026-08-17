@@ -33,10 +33,13 @@ def test_complete_production_readiness_audit():
     assert res.status_code == 200
     assert res.json()["status"] == "healthy"
 
-    res = client.get("/")
-    assert res.status_code == 200
-    assert "PatientTriage.ai" in res.json()["name"]
-    assert "NOT a medical device" in res.json()["disclaimer"]
+    res_info = client.get("/api/info")
+    assert res_info.status_code == 200
+    assert "PatientTriage.ai" in res_info.json()["name"]
+    assert "NOT a medical device" in res_info.json()["disclaimer"]
+
+    res_root = client.get("/")
+    assert res_root.status_code == 200
 
     # =========================================================================
     # PHASE 3: Hospital Registration & Admin Creation (ApexCare Medical Center, AP)

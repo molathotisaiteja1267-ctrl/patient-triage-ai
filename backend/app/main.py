@@ -67,7 +67,12 @@ def health_check():
     }
 
 
-@app.get("/", tags=["Root"])
+import os
+from fastapi.responses import FileResponse
+
+
+@app.get("/api/info", tags=["System Info"])
+@app.get("/info", tags=["System Info"])
 def root_info():
     """System information & prototype disclaimer."""
     return {
@@ -79,17 +84,50 @@ def root_info():
             "PatientTriage.ai is a research/portfolio prototype using synthetic data. "
             "It is NOT a medical device and must not be used for real-world clinical decision-making."
         ),
-        "docs_url": "/docs"
+        "docs_url": "/docs",
+        "health_url": "/health"
     }
 
 
-import os
-from fastapi.staticfiles import StaticFiles
+# Detect production static assets directory
+_possible_static_dirs = [
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static"),  # Docker: /app/static
+    os.path.join(os.getcwd(), "static"),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "frontend", "dist"),
+]
 
-# Mount static files if present in production container
-_static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
-if os.path.exists(_static_dir):
-    app.mount("/app", StaticFiles(directory=_static_dir, html=True), name="static_app")
+_static_dir = None
+for _dir in _possible_static_dirs:
+    if _dir and os.path.exists(_dir) and os.path.isdir(_dir):
+        _static_dir = os.path.abspath(_dir)
+        break
+
+if _static_dir and os.path.exists(_static_dir):
+    _assets_dir = os.path.join(_static_dir, "assets")
+    if os.path.exists(_assets_dir):
+        app.mount("/assets", StaticFiles(directory=_assets_dir), name="static_assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa_app(full_path: str):
+        # Do not intercept API, docs, or health endpoints
+        if full_path.startswith("api/") or full_path in ("docs", "redoc", "openapi.json", "health"):
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
+        # Serve static file directly if it exists (e.g. favicon.ico, vite.svg)
+        target_file = os.path.join(_static_dir, full_path)
+        if full_path and os.path.isfile(target_file):
+            return FileResponse(target_file)
+
+        # Fallback to SPA index.html for root and all client-side routes
+        index_html = os.path.join(_static_dir, "index.html")
+        if os.path.exists(index_html):
+            return FileResponse(index_html)
+
+        return JSONResponse(status_code=404, content={"detail": "Frontend index.html not found"})
+else:
+    @app.get("/", tags=["Root"])
+    def root_fallback():
+        return root_info()
 
 
 from fastapi.exceptions import RequestValidationError
